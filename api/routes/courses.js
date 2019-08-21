@@ -7,8 +7,8 @@ const fields = [
     'description'
 ];
 
-router.get('/', checkCredentials, (req, res, next) => {
-    Course.find({user: req.user._id})
+router.get('/', (req, res, next) => {
+    Course.find({})
         .exec((err, courses) => {
             if (err) {
                 return next(err);
@@ -38,7 +38,7 @@ router.post('/', checkCredentials, (req, res, next) => {
                 fields.forEach(field => {
                     if (err.errors[field]) {
                         let error = new Error(err.errors[field].message);
-                        error.status = 400;
+                        error.status = 200;
                         return next(error);
                     }
                 });
@@ -55,8 +55,8 @@ router.post('/', checkCredentials, (req, res, next) => {
     });
 });
 
-router.get('/:id', checkCredentials, (req, res) => {
-    Course.findOne({user: req.user._id, _id: req.params.id})
+router.get('/:id', (req, res, next) => {
+    Course.findOne({_id: req.params.id})
         .exec((err, course) => {
             if (err) {
                 return next(err);
@@ -90,7 +90,7 @@ router.put('/:id', checkCredentials, (req, res, next) => {
                 fields.forEach(field => {
                     if (err.errors[field]) {
                         let error = new Error(err.errors[field].message);
-                        error.status = 400;
+                        error.status = 200;
                         return next(error);
                     }
                 });

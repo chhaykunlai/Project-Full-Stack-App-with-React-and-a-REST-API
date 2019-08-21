@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const auth = require('basic-auth');
 const User = require('../models').User;
 const checkCredentials = require('../middlewares/checkCredentials');
 const bcrypt = require('bcrypt');
@@ -22,8 +21,8 @@ router.post('/', (req, res, next) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         emailAddress: req.body.emailAddress,
-        password: req.body.password,
-    }
+        password: req.body.password
+    };
 
     User.create(userData, (err, user) => {
         if (err) {
@@ -31,14 +30,14 @@ router.post('/', (req, res, next) => {
                 fields.forEach(field => {
                     if (err.errors[field]) {
                         let error = new Error(err.errors[field].message);
-                        error.status = 400;
+                        error.status = 200;
                         return next(error);
                     }
                 });
             }
             if (err.name === 'MongoError' && err.code === 11000) {
                 let error = new Error('Email address is already existed.');
-                error.status = 400;
+                error.status = 200;
                 return next(error);
             }
             return next(err);
